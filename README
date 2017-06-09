@@ -6,3 +6,18 @@ Standards for the MKRX DEMON Network
   Network Logging
   Network Signaling
   Signal Handleing
+
+# PROCESS ###################
+ADMIN -> posts (ACTION @IT RACE) -> HOST_IN_FIFO
+  HOST  - prepares DEMON code
+HOST -> posts (code_location) -> BROOD_IN_FIFO
+  BROOD - prepares & births DEMON
+BROOD -> posts (@FACE) -> ADMIN_IN_FIFO
+
+ADMIN: creator
+HOST: code spawner
+BROOD: DEMON spawner
+ACTION: what is done over iterations
+@ITER: array of work to be done
+RACE: code version
+@FACE: DEMON attributes
