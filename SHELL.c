@@ -29,3 +29,21 @@ void daemonize(const char *code)
     { printf("%s: cant fork", code); exit(1); }
   else if (pid != 0)
      exit(0); // kill parent
+// 3 - chdir if need
+/*
+  if (chdir("/") < 0)
+    { printf("%s: fail chdir", code); exit(1); }
+*/
+// 4 - close all FD
+  if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
+    { printf("%s: cannt get file limit", code); exit(1); }
+  if (rl.rlim_max == RLIM_INFINITY)
+    rl.rlim_max = 1024;
+  for (i = 0; i < rl.rlim_max; i++)
+    close(i);
+  fd0 = open("/dev/null", O_RDWR);
+  fd1 = open("/dev/null", O_RDWR);
+  fd2 = open("/dev/null", O_RDWR);
+  if (fd0 != 0 || fd1 != 1 || fd2 != 2)
+    { printf("%s: unexpected FD: %d %d %d", fd0, fd1, fd2); exit(1); }
+}
