@@ -5,6 +5,12 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/resource.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#define LOCKF "/var/run/
 // FNS /////////////////////////
 void daemonize(const char *code)
 {
@@ -14,11 +20,12 @@ void daemonize(const char *code)
   struct sigaction sa;
 // 1 - clear file creation mask
   umask(0);
-// 2 - session leader / lose TTY
+// 2 - orphan child
   if ((pid = fork()) < 0)
     { printf("%s: cant fork\n", code); exit(1); }
   else if (pid != 0)
     exit(0); // kill parent
+// 3 - lose TTY
   setsid();
   sa.sa_handler = SIG_IGN;
   sigemptyset(&sa.sa_mask);
@@ -29,12 +36,12 @@ void daemonize(const char *code)
     { printf("%s: cant fork", code); exit(1); }
   else if (pid != 0)
      exit(0); // kill parent
-// 3 - chdir if need
+// 4 - chdir if need
 /*
   if (chdir("/") < 0)
     { printf("%s: fail chdir", code); exit(1); }
 */
-// 4 - close all FD
+// 5 - purge FD
   if (getrlimit(RLIMIT_NOFILE, &rl) < 0)
     { printf("%s: cannt get file limit", code); exit(1); }
   if (rl.rlim_max == RLIM_INFINITY)
