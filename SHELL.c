@@ -1,5 +1,7 @@
 //////////////////////////////////
 // SHELL - standard DEMON skeleton
+// ARG1: location
+// ARG2: path to code
 #include <stdio.h>
 #include <signal.h>
 #include <syslog.h>
@@ -8,7 +10,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <stdlib.h>
-
 // FNS /////////////////////////
 void daemonize(const char *code)
 {
@@ -51,4 +52,8 @@ void daemonize(const char *code)
   fd2 = open("/dev/null", O_RDWR);
   if (fd0 != 0 || fd1 != 1 || fd2 != 2)
     { printf("%s: unexpected FD: %d %d %d", code, fd0, fd1, fd2); exit(1); }
+}
+int main(int argc, char *argv[])
+{
+  
 }
