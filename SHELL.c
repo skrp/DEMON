@@ -5,12 +5,6 @@
 #include <fcntl.h>
 #include <signal.h>
 #include <sys/resource.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#define LOCKF "/var/run/
 // FNS /////////////////////////
 void daemonize(const char *code)
 {
